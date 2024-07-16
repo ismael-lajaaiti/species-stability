@@ -1,5 +1,3 @@
-import ColorSchemes: Accent_3
-
 # Theme for publications.
 publication_theme = Theme(;
     Axis = Attributes(;
@@ -18,9 +16,6 @@ publication_theme = Theme(;
         titlesize = 10,
     ),
 )
-
-# Useful variables for plotting.
-palette = ColorSchemes.Accent_8
 
 # Save figure with physical dimension.
 cm_to_pt = 28.3465 # 1 cm = 28.3465 pt, cf. CairoMakie documentation.
