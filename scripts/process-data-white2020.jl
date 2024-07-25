@@ -68,7 +68,7 @@ ax = Axis(
     fig[1, 1];
     xlabel = "Coefficient of variation",
     ylabel = "Response to pulse",
-    yscale = log10,
+    # yscale = log10,
     # xscale = log10,
 )
 treatment_list = ["+PGL", "-PGL", "-L", "-G", "-P", "CONTROL"]
@@ -78,7 +78,7 @@ for treatment in treatment_list
     plot_ctrl = df[df.Treatment.=="$treatment", "Plot"] |> unique
     plot_dist = df[df.Treatment.=="$treatment Dist", "Plot"] |> unique
     df_cv = DataFrame(; algae = String[], cv = Float64[], plot = Int[])
-    for plot in plot_dist
+    for plot in plot_ctrl
         data = df[df.Plot.==plot, :]
         deleteat!(data, data.Time .< 6)
         for algae in common_algae
