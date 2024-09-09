@@ -1,4 +1,3 @@
-using AlgebraOfGraphics
 using CairoMakie
 using DataFrames
 using DifferentialEquations
@@ -7,15 +6,10 @@ using LinearAlgebra
 using LotkaVolterra
 using Random
 using StatsBase
+include("makie-theme.jl")
+include("scripts/functions.jl")
 
-Random.seed!(1234)
-
-set_theme!(theme_minimal())
-function B_mixed(S; mu = -0.1, sigma = 0.05)
-    B = rand(Normal(mu, sigma), S, S)
-    B[diagind(B)] .= -1
-    B
-end
+Random.seed!(1234) # Seed for reproducibility.
 
 S = 50 # Number of species.
 mu_dict = Dict("Negative" => -0.15, "Negative and positive" => 0.0)
@@ -49,7 +43,7 @@ for (interaction, mu) in mu_dict
     s_true = (eta_end .- eta) ./ eta
     B_nodiag = B - Diagonal(diag(B))
     @info sum(B_nodiag .> 0) / (S * (S - 1))
-    B_weighted = B_nodiag * Diagonal(eta)
+    B_weighted = B_nodiag # * Diagonal(eta)
     received_abs = sqrt.(vec(sum(B_weighted .^ 2; dims = 2)))
     received_alg = vec(sum(B_weighted; dims = 2))
     append!(
@@ -67,33 +61,6 @@ for (interaction, mu) in mu_dict
         ),
     )
 end
-
-# Figure 1. Reactivity against relative yield.
-fig = Figure();
-interaction = "Negative"
-ax1 = Axis(
-    fig[1, 1];
-    # xlabel = "Relative yield",
-    xlabel = L"\sqrt{\sum_{j \neq i} b_{ij}^2 \eta_j^2}",
-    ylabel = L"\sum_{j \neq i} b_{ij} \eta_j",
-    title = interaction,
-)
-df1 = df[df.interaction.==interaction, :]
-scatter!(df1.received_abs, df1.received_alg)
-interaction = "Negative and positive"
-ax2 = Axis(fig[1, 2]; xlabel = L"\sqrt{\sum_{j \neq i} b_{ij}^2 \eta_j^2}", ylabel = "", title = interaction)
-df2 = df[df.interaction.==interaction, :]
-scatter!(df2.received_abs, df2.received_alg)
-label_panels!(fig, 1, 2)
-width = full_page_width * cm_to_pt
-height = width * 0.7 / width_height_ratio
-save_figure(
-    "figures/00_interactions-sign",
-    # "/tmp/plot",
-    fig,
-    1.2 .* (width, height),
-)
-fig
 
 # Figure 1. Reactivity against relative yield.
 fig = Figure()

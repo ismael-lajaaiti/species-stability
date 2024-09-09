@@ -1,21 +1,4 @@
-# Theme for publications.
-publication_theme = Theme(;
-    Axis = Attributes(;
-        xgridvisible = false,
-        ygridvisible = false,
-        xtickalign = 1,
-        ytickalign = 1,
-        xticklabelsize = 10,
-        yticklabelsize = 10,
-    ),
-    Colorbar = Attributes(; ticklabelsize = 10),
-    Legend = Attributes(;
-        backgroundcolor = :grey80,
-        rowgap = -5,
-        labelsize = 10,
-        titlesize = 10,
-    ),
-)
+set_theme!(theme_minimal())
 
 # Save figure with physical dimension.
 cm_to_pt = 28.3465 # 1 cm = 28.3465 pt, cf. CairoMakie documentation.
