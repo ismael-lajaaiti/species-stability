@@ -1,5 +1,10 @@
 # Stability of species within ecological communities
 
+## TODO
+
+- [ ] Refactor code using GLV.jl
+- [ ] Add abstract.
+
 ## Abstract
 
 > [!CAUTION]
