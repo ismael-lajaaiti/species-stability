@@ -1,6 +1,7 @@
 using GLV
 using DataFrames
 using Distributions
+using Random
 using CairoMakie
 include("makie-theme.jl")
 include("scripts/resistance-resilience/functions.jl")
