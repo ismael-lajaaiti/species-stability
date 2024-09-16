@@ -19,7 +19,7 @@ c = rand(
     interaction = :core,
 )
 
-df = get_resistance_resilience(c)
+df, c = get_resistance_resilience(c)
 
 fig = Figure();
 ax = Axis(

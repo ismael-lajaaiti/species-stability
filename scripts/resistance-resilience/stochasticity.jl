@@ -21,7 +21,7 @@ c = rand(
 )
 N_eq = abundance(c)
 
-noise_intensity = 0.05
+noise_intensity = 0.06
 noise!(du, u, p, t) =
     for i in eachindex(du)
         du[i] = noise_intensity * u[i]
@@ -48,3 +48,43 @@ fig = Figure();
 ax = Axis(fig[1, 1]; xlabel = "Time", ylabel = "Abundance")
 lines!(sol.t, sol[1, :]; color = :black, linewidth = 0.5)
 fig
+
+df1, _ = get_resistance_resilience(
+    c;
+    noise_intensity,
+    stochastic = true,
+    beta = 0.1,
+    n_experiments = 1,
+)
+df10, _ = get_resistance_resilience(
+    c;
+    noise_intensity,
+    stochastic = true,
+    beta = 0.1,
+    n_experiments = 10,
+)
+
+size = (700, 300)
+fig = Figure(; size);
+ax1 = Axis(
+    fig[1, 1];
+    xlabel = "Resistance",
+    ylabel = "Resilience",
+    xscale = log10,
+    yscale = log10,
+    title = "1 experiment",
+)
+scatter!(df1.resistance, df1.resilience; color = df1.relative_yield)
+ax2 = Axis(
+    fig[1, 2];
+    xlabel = "Resistance",
+    xscale = log10,
+    yscale = log10,
+    title = "10 experiments",
+)
+scatter!(df10.resistance, df10.resilience; color = df10.relative_yield)
+limits = extrema(df1.relative_yield)
+linkaxes!(ax1, ax2)
+fig[1, 3] = Colorbar(fig[1, 2]; label = "Relative yield", limits)
+fig
+save_figure("figures/resist-resil-experiments", fig, size)
