@@ -11,7 +11,7 @@ include("makie-theme.jl")
 set_theme!(theme_minimal())
 Random.seed!(1234)
 
-function B_mixed(S; mu = -0.1, sigma = 0.12)
+function B_mixed(S; mu = -0.1, sigma = 0.05)
     B = rand(Normal(mu, sigma), S, S)
     B[diagind(B)] .= -1
     B
@@ -36,7 +36,7 @@ interactions = sqrt.(sum(inv(B) .^ 2; dims = 2)) |> vec
 
 function glv(u, p, t)
     r, A, K = p
-    r .* (1 .+ A * u ./ K) .* u
+    r .* (1 .+ (A * u) ./ K) .* u
 end
 
 abundance = eta .* K
@@ -45,7 +45,9 @@ alpha_dict = Dict("Immigration" => 0, "Demographic" => 0.5, "Environmental" => 1
 amplitude_dict = Dict() # Where to store the results.
 for (noise_type, alpha) in alpha_dict
     w = abundance .^ alpha
-    w /= sum(w) # Normalize so that sum(w) = 1.
+    noise_type == "Environmental" && @info w
+    w /= sum(abundance) # Normalize so that sum(w) = 1.
+    noise_type == "Environmental" && @info w
     white_noise(u, p, t) = noise_amplitude * w
     p = (fill(1, S), A, K)
     pb = SDEProblem(glv, white_noise, eta .* K, (0.0, 10_000.0), p)
