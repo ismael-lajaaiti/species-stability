@@ -34,7 +34,7 @@ df.treatment = replace(
     "-L" => :pg,
     "-G" => :pl,
     "-P" => :gl,
-    "CONTROL" => :control,
+    "CONTROL" => :uncaged,
 )
 df.treatment = Symbol.(df.treatment)
 
