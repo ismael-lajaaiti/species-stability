@@ -6,7 +6,8 @@ pennekamp2018: data/pennekamp2018/processed-data.csv \
                data/pennekamp2018/carrying-capacity.csv \
                figures/pennekamp2018/monocultures.png \
 			   figures/pennekamp2018/carrying-capacity.png \
-               figures/pennekamp2018/var-vs-biomass.png
+               figures/pennekamp2018/var-vs-biomass.png \
+               figures/pennekamp2018/fit-logistic.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
 	julia --project=. src/pennekamp2018/process.jl
