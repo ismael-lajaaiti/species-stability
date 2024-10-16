@@ -4,7 +4,7 @@ all: pennekamp2018 white2020 # Build everything.
 
 pennekamp2018: data/pennekamp2018/processed-data.csv \
                data/pennekamp2018/carrying-capacity.csv \
-               figures/pennekamp2018/first-ts.png \
+               figures/pennekamp2018/monocultures.png \
 			   figures/pennekamp2018/carrying-capacity.png \
                figures/pennekamp2018/var-vs-biomass.png
 
