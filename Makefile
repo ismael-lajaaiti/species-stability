@@ -7,13 +7,18 @@ pennekamp2018: data/pennekamp2018/processed-data.csv \
                figures/pennekamp2018/monocultures.png \
 			   figures/pennekamp2018/carrying-capacity.png \
                figures/pennekamp2018/var-vs-biomass.png \
-               figures/pennekamp2018/fit-logistic.png
+               figures/pennekamp2018/fit-logistic.png \
+               figures/pennekamp2018/biomass-vs-richness.png \
+               figures/pennekamp2018/resistance-vs-ry.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
 	julia --project=. src/pennekamp2018/process.jl
 
 data/pennekamp2018/carrying-capacity.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/compute-carrying-capacity.jl
 	julia --project=. src/pennekamp2018/compute-carrying-capacity.jl
+
+data/pennekamp2018/K_linear-model.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/plot-biomass-vs-richness.jl
+	julia --project=. src/pennekamp2018/plot-biomass-vs-richness.jl
 
 figures/pennekamp2018/%.png: data/pennekamp2018/processed-data.csv src/pennekamp2018/plot-%.jl
 	julia --project=. src/pennekamp2018/plot-$*.jl
