@@ -11,7 +11,8 @@ pennekamp2018: data/pennekamp2018/processed-data.csv \
                figures/pennekamp2018/biomass-vs-richness.png \
                figures/pennekamp2018/resistance-vs-ry.png
 
-simulations: figures/simulations/press-species-community.png
+simulations: figures/simulations/press-species-community.png \
+	         figures/simulations/return-time.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
 	julia --project=. src/pennekamp2018/process.jl
