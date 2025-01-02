@@ -36,13 +36,13 @@ end
 am_on_hm_avg = mean(am_on_hm)
 
 # Plot.
-fig = Figure(; size = (500, 550));
+fig = Figure(; size = (600, 550));
 ax1 = Axis(fig[1, 1]; xlabel = "Carrying capacity (μg/mL)", ylabel = "Biomass (μg/mL)")
 ax2 = Axis(fig[1, 2]; xlabel = "Scaled carrying capacity", ylabel = "Scaled biomass")
 ax3 = Axis(
     fig[2, 1:2];
-    xlabel = "Relative yield",
-    ylabel = "Sensitivity to press",
+    xlabel = "Species relative yield",
+    ylabel = "Species sensitivity",
     aspect = AxisAspect(1.5),
 )
 level = 0.9 # Confidence interval for linear model.
@@ -63,34 +63,66 @@ for gdf in groupby(df_avg, :predicted_species)
     push!(df_s, (ry, s_mean, e_low, e_high))
     gdf.predicted_biomass = predict(model, gdf)
     gdf = dropmissing(gdf, :predicted_biomass)
-    scatter!(ax1, gdf.K_estimated, gdf.species_biomass; label = "$sp", alpha = 0.8)
-    lines!(ax1, gdf.K_estimated, gdf.predicted_biomass)
+    scatter!(
+        ax1,
+        gdf.K_estimated,
+        gdf.species_biomass;
+        label = "$sp",
+        markersize = gdf.temperature .- 8,
+        color = B_ref / K_ref,
+        colormap = :algae,
+        colorrange = (0, 1),
+        alpha = 0.5,
+    )
+    lines!(
+        ax1,
+        gdf.K_estimated,
+        gdf.predicted_biomass;
+        color = B_ref / K_ref,
+        colormap = :algae,
+        colorrange = (0, 1),
+    )
     scatter!(
         ax2,
         gdf.K_estimated ./ K_ref,
         gdf.species_biomass ./ B_ref;
         label = "$sp",
-        alpha = 0.8,
+        alpha = 0.5,
+        color = B_ref / K_ref,
+        colormap = :algae,
+        colorrange = (0, 1),
+        markersize = gdf.temperature .- 8,
     )
-    lines!(ax2, gdf.K_estimated ./ K_ref, gdf.predicted_biomass ./ B_ref)
+    lines!(
+        ax2,
+        gdf.K_estimated ./ K_ref,
+        gdf.predicted_biomass ./ B_ref;
+        color = B_ref / K_ref,
+        colormap = :algae,
+        colorrange = (0, 1),
+    )
 end
-scatter!(ax3, df_s.ry, df_s.s_mean; color = :gray)
-errorbars!(
-    ax3,
-    df_s.ry,
-    df_s.s_mean,
-    df_s.e_low,
-    df_s.e_high;
-    color = :gray,
-    whiskerwidth = 10,
-)
+for row in eachrow(df_s)
+    scatter!(ax3, row.ry, row.s_mean)
+    errorbars!(ax3, [row.ry], [row.s_mean], [row.e_low], [row.e_high]; whiskerwidth = 10)
+end
 ry_min, ry_max = extrema(df_s.ry)
 ry = LinRange(ry_min, ry_max, 100)
 s_ii = 1 ./ ry
 pred_sensitivity = (s_ii .+ (1 .- s_ii) * am_on_hm_avg)
-lines!(ax3, ry, pred_sensitivity; color = :black, label = "prediction")
+lines!(ax3, ry, pred_sensitivity; color = :black, label = "analytical prediction")
 axislegend()
-fig[0, 1:2] = Legend(fig, ax1, "Species"; orientation = :horizontal)
+markersizes = unique(df_avg.temperature) .- 8
+group_size = [
+    MarkerElement(;
+        marker = :circle,
+        color = :black,
+        strokecolor = :transparent,
+        markersize = ms,
+    ) for ms in markersizes
+]
+fig[1, 3] = Legend(fig, group_size, string.(markersizes .+ 8), "Temperature")
+fig[2, 3] = Legend(fig, ax1, "Species")
 l1 = fig[1, 1] = GridLayout()
 l2 = fig[1, 2] = GridLayout()
 l3 = fig[2, 1:2] = GridLayout()
@@ -99,10 +131,11 @@ for (label, layout) in zip(["A", "B", "C"], [l1, l2, l3])
         layout[1, 1, TopLeft()],
         label;
         font = :bold,
-        padding = label == "C" ? (0, -80, 5, 0) : (0, 5, 5, 0),
+        padding = label == "C" ? (0, -20, 5, 0) : (0, 5, 5, 0),
         halign = :right,
     )
 end
 fig
 
 save("figures/pennekamp2018/resistance-vs-ry.png", fig)
+save("figures/pennekamp2018/resistance-vs-ry.svg", fig)

@@ -44,7 +44,7 @@ sensitivity_com = vec(mean(sensitivity_matrix; dims = 1))
 ci_com = [confindence_interval(x) for x in eachcol(sensitivity_matrix)]
 
 # Press on the focal species.
-n = 50
+n_rep = 50
 sensitivity_matrix = zeros(n_rep, S)
 for rep in 1:n_rep, i in 1:S
     kappa = zeros(S)
@@ -76,14 +76,14 @@ ax1 = Axis(
     ylabel = "Species sensitivity to press",
     title = "Press on focal species",
 )
-scatter!(ry, sensitivity_sp; color = :gray)
-errorbars!(ry, sensitivity_sp, ci_sp; color = :gray)
+scatter!(ry, sensitivity_sp; color = :coral, label = "simulation")
+errorbars!(ry, sensitivity_sp, ci_sp; color = :coral)
 # scatter!(ry, s_diag; color = :gray)
-lines!(ry_val, 1 ./ ry_val; color = :black, label = "prediction")
+lines!(ry_val, 1 ./ ry_val; color = :black, label = "analytical prediction")
 axislegend()
 ax2 = Axis(fig[1, 2]; xlabel = "Species relative yield", title = "Press on whole community")
-scatter!(ry, sensitivity_com; color = :gray)
-errorbars!(ry, sensitivity_com, ci_com; color = :gray, whiskerwidth = 5)
+scatter!(ry, sensitivity_com; color = :orange2)
+errorbars!(ry, sensitivity_com, ci_com; color = :orange2, whiskerwidth = 5)
 lines!(ry_val, pred_stab; color = :black)
 l1 = fig[1, 1] = GridLayout()
 l2 = fig[1, 2] = GridLayout()
@@ -100,3 +100,4 @@ fig
 
 isdir("figures/simulations") || mkdir("figures/simulations")
 save("figures/simulations/press-species-community.png", fig)
+save("figures/simulations/press-species-community.svg", fig)
