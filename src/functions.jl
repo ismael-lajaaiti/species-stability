@@ -6,5 +6,5 @@ end
 
 function glv(u, p, t)
     r, A, K = p
-    r .* (1 .+ A * u ./ K) .* u
+    r.* (1 .+ A * u ./ K) .* u
 end
