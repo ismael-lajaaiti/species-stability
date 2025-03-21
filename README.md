@@ -1,4 +1,4 @@
-# Stability of species within ecological communities
+# Revealing the organization of species stability in ecological communities
 
 Code to reproduce the figures of [insert DOI].
 
