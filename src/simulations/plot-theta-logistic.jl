@@ -78,19 +78,6 @@ for θ in θ_val
     push!(coms, c)
 end
 
-c = coms[1]
-Beq = abundance(c)
-A = deepcopy(c.A)
-D = Diagonal(relative_yield(c) .^ (-θ) .* Beq ./ c.K)
-alpha = D * A
-alpha[diagind(alpha)] .= -1
-sum(inv(alpha), dims=2)
-
-scatter((1 ./ df.ry .- a .* (1 ./ df.ry .- 1)), df.s, color=df.θ)
-
-z0 = rand(D, 10_000)
-a = mean(z0) / harmmean(z0)
-scatter(df.rs .* (1 .+ a .* (1 ./ df.ry_hat .- 1)) .* df.θ, df.r_short, color=df.θ)
 
 inch = 96
 pt = 4 / 3
@@ -118,8 +105,9 @@ ax4 = Axis(gb[1, 3]; xlabel="Self-regulation loss (SL)", ylabel="Characteristic 
 ax5 = Axis(gc[1, 1]; xlabel="Relative yield (RY)", ylabel="Pseudo relative yield (RY)")
 ax6 = Axis(gc[1, 2]; xlabel="Short-term  recovery rate", ylabel="Prediction based on RY")
 ax7 = Axis(gc[1, 3]; xlabel="Sensitivity to press", ylabel="Prediction based on RY")
+z0 = rand(D, 10_000)
+a = mean(z0) / harmmean(z0)
 for θ in θ_val
-    @info θ
     dfθ = subset(df, :θ => ByRow(==(θ)), :ry => ByRow(>(0.01)))
     scatter!(ax3, dfθ.ry, dfθ.r_cara, label="θ=$θ")
     scatter!(ax4, dfθ.rs, dfθ.r_cara, label="θ=$θ")
@@ -137,4 +125,5 @@ ablines!(ax7, 0, 1, color=:black)
 # hideydecorations!(ax4)
 fig
 
-save("figures/simulations/thetalogistic.svg", fig)
+save("figures/si-theta-logistic.png", fig)
+# save("figures/simulations/thetalogistic.svg", fig)

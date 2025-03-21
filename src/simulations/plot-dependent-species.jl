@@ -5,7 +5,7 @@ using Distributions
 using Random
 using CairoMakie
 set_theme!(theme_minimal())
-Random.seed!(123)
+Random.seed!(113)
 
 # Create the community.
 S = 30
@@ -45,7 +45,7 @@ tspan = (0, 1_000)
 n_rep = 1_000
 sensitivity_matrix = zeros(n_rep, S)
 for rep in 1:n_rep
-    kappa = rand(D, S)
+    kappa = 0.1 * rand(D, S)
     u_press = c.u .+ kappa .* c.u
     sol = simulate_press_u(c, u_press, tspan)
     N_press = sol[end]
@@ -54,7 +54,6 @@ for rep in 1:n_rep
 end
 sensitivity_com = vec(mean(sensitivity_matrix; dims=1))
 
-scatter!(1 ./ ry[dependent_sp], sensitivity_com[dependent_sp], label="dependent species")
 kappa_list = rand(D, 100_000)
 am = mean(kappa_list)
 hm = harmmean(kappa_list)
@@ -84,4 +83,5 @@ inv_eta_val = LinRange(inv_eta_min, inv_eta_max, 100)
 lines!(inv_eta_val, prediction.(inv_eta_val, ratio), color=:black)
 fig
 
-save("figures/simulations/dependent-species.svg", fig)
+save("figures/si-dependent-species.png", fig)
+# save("figures/simulations/dependent-species.svg", fig)

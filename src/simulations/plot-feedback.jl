@@ -43,7 +43,6 @@ alpha = 0.7
 for mu in mu_val
     color = mu_colors[mu]
     df_mu = subset(df, :mu => ByRow(==(mu)))
-    @info mu
     ry_min, ry_max = extrema(df_mu.ry)
     ry_val = LinRange(ry_min, ry_max, 100)
     scatter!(df_mu.ry, df_mu.Vii; label="μS=$mu", color, alpha)
@@ -53,4 +52,5 @@ end
 fig[0, 1] = axislegend(; orientation=:horizontal)
 fig
 
-save("figures/simulations/feedback.pdf", fig)
+save("figures/si-feedback.png", fig)
+# save("figures/simulations/feedback.pdf", fig)
