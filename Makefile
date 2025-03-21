@@ -1,6 +1,10 @@
-.PHONY: all main supporting # High-level actions.
+.PHONY: setup all main supporting # High-level actions.
 
-all: main supporting # Build everything.
+all: setup main supporting # Build everything.
+
+setup:
+	mkdir -p figures
+	julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
 main: data/pennekamp2018/processed-data.csv \
       data/pennekamp2018/K_linear-model.csv \

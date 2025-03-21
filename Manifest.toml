@@ -2,7 +2,7 @@
 
 julia_version = "1.11.4"
 manifest_format = "2.0"
-project_hash = "fe4b8bf81e7a8353af627d437b023d612f16a00c"
+project_hash = "372c970d6baaeb748283305e512608e4a8adaa1e"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "e2478490447631aedba0823d4d7a80b2cc8cdb32"
@@ -1494,12 +1494,6 @@ version = "0.3.29"
 [[deps.Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 version = "1.11.0"
-
-[[deps.LotkaVolterra]]
-deps = ["DifferentialEquations", "Distributions", "LinearAlgebra", "QuadGK"]
-path = "LotkaVolterra"
-uuid = "ed2ccd36-4f10-4be2-81fa-228990c6725e"
-version = "0.1.0"
 
 [[deps.LoweredCodeUtils]]
 deps = ["JuliaInterpreter"]
