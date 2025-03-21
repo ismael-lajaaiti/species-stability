@@ -87,4 +87,4 @@ scatter!(df_join2.mu, df_join2.r_com, label="community")
 scatter!(df_join2.mu, df_join2.r_sp, label="species")
 fig
 
-save("figures/simulations/si-sp-vs-com.svg", fig)
+save("figures/simulations/competition-gradient.svg", fig)

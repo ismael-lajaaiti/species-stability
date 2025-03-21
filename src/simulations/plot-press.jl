@@ -97,7 +97,3 @@ end
 fig
 
 save("figures/simulations/press.svg", fig)
-
-isdir("figures/simulations") || mkdir("figures/simulations")
-save("figures/simulations/press-species-community.png", fig)
-save("figures/simulations/press-species-community.svg", fig)

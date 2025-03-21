@@ -54,4 +54,4 @@ end
 fig[0, 1] = axislegend(; orientation=:horizontal)
 fig
 
-save("figures/simulations/v00.pdf", fig)
+save("figures/simulations/feedback.pdf", fig)

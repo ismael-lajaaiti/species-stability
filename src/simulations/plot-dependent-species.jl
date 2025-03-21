@@ -84,4 +84,4 @@ inv_eta_val = LinRange(inv_eta_min, inv_eta_max, 100)
 lines!(inv_eta_val, prediction.(inv_eta_val, ratio), color=:black)
 fig
 
-save("figures/simulations/si-dependent-species.svg", fig)
+save("figures/simulations/dependent-species.svg", fig)
