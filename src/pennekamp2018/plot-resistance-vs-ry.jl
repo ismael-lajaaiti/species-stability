@@ -41,6 +41,7 @@ for i in eachindex(kappa_list)
 end
 am_on_hm_avg = mean(am_on_hm)
 
+level = 0.8 # Confidence interval for linear model.
 df_s2 =
     DataFrame(; ry=Float64[], s_mean=Float64[], e=[], species=[])
 for gdf in groupby(df_avg2, [:predicted_species, :combination])
@@ -72,11 +73,10 @@ ax2 = Axis(l2[1, 2]; xlabel="Carrying capacity (μg/mL)")
 hideydecorations!(ax2)
 ax3 = Axis(
     l1[1, 1];
-    xlabel="RS",
+    xlabel="SL",
     ylabel="Sensitivity to press\n(reversed)",
     # aspect=AxisAspect(1.5),
 )
-level = 0.8 # Confidence interval for linear model.
 df_s =
     DataFrame(; ry=Float64[], s_mean=Float64[], e_low=Float64[], e_high=Float64[])
 colorrange = extrema(df.temperature)
@@ -140,7 +140,7 @@ for (label, layout) in zip(["A", "B", "C"], [l1, l2[1, 1], l2[1, 2]])
 end
 fig
 
-save("figures/simulations/data.svg", fig)
-
-save("figures/pennekamp2018/resistance-vs-ry.png", fig)
-save("figures/pennekamp2018/resistance-vs-ry.svg", fig)
+save("figures/data.png", fig)
+# save("figures/simulations/data.svg", fig)
+# save("figures/pennekamp2018/resistance-vs-ry.png", fig)
+# save("figures/pennekamp2018/resistance-vs-ry.svg", fig)

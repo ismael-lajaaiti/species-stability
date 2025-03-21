@@ -74,11 +74,11 @@ pt = 4 / 3
 cm = inch / 2.54
 width = 10cm
 fig = Figure(; size=(width, width / 1.8), fontsize=8pt);
-ax1 = Axis(fig[1, 2]; xlabel="RS")
+ax1 = Axis(fig[1, 2]; xlabel="SL")
 scatter!(ry, sensitivity_sp; color=:orangered3, label="simulation")
 lines!(ry_val, 1 ./ ry_val; color=:black, label="analytical\nprediction")
 ax1.yreversed = true
-ax2 = Axis(fig[1, 1]; xlabel="RS", ylabel="Sensitivity to press (reversed)")
+ax2 = Axis(fig[1, 1]; xlabel="SL", ylabel="Sensitivity to press (reversed)")
 scatter!(ry, sensitivity_com; color=:goldenrod, label="simulation")
 lines!(ry_val, pred_stab; color=:black, label="analytical\nprediction")
 ax2.yreversed = true
@@ -96,4 +96,5 @@ for (label, layout) in zip(["A", "B"], [l1, l2])
 end
 fig
 
-save("figures/simulations/press.svg", fig)
+save("figures/press.png", fig)
+# save("figures/simulations/press.svg", fig)

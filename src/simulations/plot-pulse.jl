@@ -76,7 +76,7 @@ for (sp, eta) in enumerate(ry)
     scatter!(ts, xi_sp_avg[sp, :]; color=eta, colorrange, colormap, markersize=5, alpha)
 end
 hlines!([0]; color=:black, linewidth=1, linestyle=:dash)
-cb = Colorbar(g1[1, 2]; limits=colorrange, colormap, label="RS")
+cb = Colorbar(g1[1, 2]; limits=colorrange, colormap, label="SL")
 elems = [LineElement(), MarkerElement(; marker=:circle)]
 axislegend(ax1, elems, ["analytical prediction", "simulation"]; tellwidth=false, position=:rb)
 # Axis 2. Species short-term recovery rate.
@@ -84,7 +84,7 @@ ry_min, ry_max = extrema(ry)
 ry_vals = LinRange(ry_min, ry_max, 100)
 ax2 = Axis(
     g2[1, 1];
-    xlabel="RS",
+    xlabel="SL",
     ylabel="Recovery rate",
     title="Short-term",
 )
@@ -94,7 +94,7 @@ r_simu = -(log.(abs.(xi_sp_avg[:, idx]))) ./ duration
 scatter!(ry, r_simu; color=:goldenrod)
 lines!(ry_vals, R.(ry_vals, duration); color=:black)
 # Axis 3. Species long-term recovery rate.
-ax3 = Axis(g2[1, 2]; xlabel="RS", title="Long-term")
+ax3 = Axis(g2[1, 2]; xlabel="SL", title="Long-term")
 duration = 10
 idx = findfirst(==(duration), ts)
 r_simu = -(log.(abs.(xi_sp_avg[:, idx]))) ./ duration
@@ -102,4 +102,5 @@ scatter!(ry, r_simu; color=:orangered3)
 lines!(ry_vals, R.(ry_vals, duration); color=:black)
 fig
 
-save("figures/simulations/pulse.svg", fig)
+save("figures/pulse.png", fig)
+# save("figures/simulations/pulse.svg", fig)
