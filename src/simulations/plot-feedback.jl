@@ -31,7 +31,6 @@ for mu in mu_val
     append!(df, (; mu, mu0, ry, Vii))
 end
 
-
 inch = 96
 pt = 4 / 3
 cm = inch / 2.54
