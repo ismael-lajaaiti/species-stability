@@ -11,17 +11,25 @@ Code to reproduce the figures of [insert DOI].
 
 To reproduce figures of the article, first you have to clone this repository.
 Then move to the cloned repository and run in a terminal
+The Julia environment can be setup with
+
+```sh
+make setup
+```
+
+This should create the `figures/` folder, and install all required packages.
+
+> [!TIP]
+> We advise to use Julia 1.11.
+
+The figures of the main text can be generate with
 
 ```sh
 make main
 ```
 
-This single command should execute all the scripts necessary to generate the figures of the main text.
 To generate the figures of the supporting information, run
 
 ```sh
 make supporting
 ```
-
-> [!TIP]
-> We advise to use Julia 1.11.
