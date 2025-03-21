@@ -7,7 +7,7 @@ Code to reproduce the figures of [insert DOI].
 - Update GLV.jl documentation
 - Update makefile
 
-## Generate figures of the article
+## Generate the figures of the article
 
 To reproduce figures of the article, first you have to clone this repository.
 Then move to the cloned repository and run in a terminal
