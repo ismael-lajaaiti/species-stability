@@ -4,7 +4,7 @@ Code to reproduce the figures of the manuscript *Revealing the organization of s
 
 ## Generate the figures of the article
 
-To reproduce figures of the article, first you have to clone this repository.
+To reproduce figures of the article, you first have to clone this repository.
 Then move to the cloned repository and run in a terminal
 The Julia environment can be setup with
 
