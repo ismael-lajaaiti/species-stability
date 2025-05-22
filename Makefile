@@ -8,6 +8,7 @@ setup:
 
 main: data/pennekamp2018/processed-data.csv \
       data/pennekamp2018/K_linear-model.csv \
+	  data/pennekamp2018/A_normalized.csv \
       figures/data.png \
 	  figures/pulse.png \
 	  figures/press.png
@@ -23,6 +24,9 @@ data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/penne
 
 data/pennekamp2018/K_linear-model.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/compute-K.jl
 	julia --project=. src/pennekamp2018/plot-biomass-vs-richness.jl
+
+data/pennekamp2018/A_normalized.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/infer-interactions.jl
+	julia --project=. src/pennekamp2018/infer-interactions.jl
 
 figures/data.png: data/pennekamp2018/processed-data.csv data/pennekamp2018/K_linear-model.csv src/pennekamp2018/plot-data.jl
 	julia --project=. src/pennekamp2018/plot-data.jl
