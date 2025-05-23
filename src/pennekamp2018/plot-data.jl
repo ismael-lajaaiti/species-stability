@@ -44,14 +44,19 @@ for a in gdf
     df_A_T = subset(df_A, :temperature => ByRow(==(T)))
     for row in eachrow(a)
         focal_sp = row.predicted_species
-        A_received = subset(df_A, :row => ByRow(==(focal_sp)))
+        A_incoming = subset(df_A_T, :row => ByRow(==(focal_sp)))
         Ai = 0
         SL_exp = 1
+        mean_SL = 0
         for interacting_sp in sp_list
-            SL_j = a[a.predicted_species.==interacting_sp, :SL] |> first
-            SL_exp += A_received[1, interacting_sp] * SL_j
-            Ai += A_received[1, interacting_sp]
+            if interacting_sp != focal_sp
+                SL_j = a[a.predicted_species.==interacting_sp, :SL] |> first
+                mean_SL += SL_j / (length(sp_list) - 1)
+                mean_SL += SL_exp += A_incoming[1, interacting_sp] * SL_j
+                Ai += A_incoming[1, interacting_sp]
+            end
         end
+        # Ai *= mean_SL
         push!(SL_exp_list, SL_exp)
         push!(Ai_list, Ai)
     end
@@ -94,6 +99,7 @@ end
 df_s2
 
 # Plot.
+alpha = 0.8
 inch = 96
 pt = 4 / 3
 cm = inch / 2.54
@@ -104,12 +110,7 @@ l2 = fig[2, 1:3] = GridLayout()
 ax1 = Axis(l2[1, 1]; xlabel = "Carrying capacity (μg/mL)", ylabel = "Biomass (μg/mL)")
 ax2 = Axis(l2[1, 2]; xlabel = "Carrying capacity (μg/mL)")
 hideydecorations!(ax2)
-ax3 = Axis(
-    l1[1, 1];
-    xlabel = "SL",
-    ylabel = "Sensitivity to press\n(reversed)",
-    # aspect=AxisAspect(1.5),
-)
+ax3 = Axis(l1[1, 1]; xlabel = "SL", ylabel = "Sensitivity to press\n(reversed)")
 df_s =
     DataFrame(; ry = Float64[], s_mean = Float64[], e_low = Float64[], e_high = Float64[])
 colorrange = extrema(df.temperature)
@@ -137,7 +138,7 @@ for gdf in groupby(df_avg, :predicted_species)
         gdf.K_estimated,
         gdf.species_biomass;
         label = "$sp",
-        alpha = 0.7,
+        alpha,
         color = gdf.temperature,
         colorrange,
         colormap,
@@ -155,7 +156,7 @@ for sp in species
         df_sp.ry,
         df_sp.s_mean;
         markersize = 12 .- 8 .* df_sp.e,
-        alpha = 0.7,
+        alpha,
         color = color_dict[sp],
     )
 end
@@ -164,7 +165,7 @@ ry = LinRange(ry_min + 0.01, ry_max, 100)
 s_ii = 1 ./ ry
 pred_sensitivity = (s_ii .+ (1 .- s_ii) * am_on_hm_avg)
 lines!(ax3, ry, pred_sensitivity; color = :black, label = "analytical prediction")
-hlines!(1; color = :grey, linestyle = :dash)
+hlines!(1; color = :grey, linestyle = :dash, label = "baseline")
 elems = [LineElement(), MarkerElement(; marker = :circle)]
 axislegend(ax3, elems, ["analytical\nprediction", "data"]; position = :rt)
 ax3.yreversed = true
@@ -175,14 +176,14 @@ l3 = fig[3, :] = GridLayout()
 ax = Axis(l3[1, 1]; xlabel = "SL expected", ylabel = "SL observed")
 for (i, sp) in enumerate(species_list)
     df_sp = subset(df_SL, :predicted_species => ByRow(==(sp)))
-    scatter!(df_sp.SL_exp, df_sp.SL; alpha = 0.5)
+    scatter!(df_sp.SL_exp, df_sp.SL; alpha)
 end
 ablines!(0, 1; color = :black, label = "1:1")
 axislegend(; position = :lt)
 ax = Axis(l3[1, 2]; xlabel = "SL expected")
-scatter!(df_SL.SL_exp, df_SL.SL; color = Float64.(df_SL.Ai), alpha = 0.5)
-ablines!(0, 1; color = :black, label = "1:1")
 colorrange = extrema(df_SL.Ai)
+scatter!(df_SL.SL_exp, df_SL.SL; color = Float64.(df_SL.Ai), alpha, colorrange)
+ablines!(0, 1; color = :black, label = "1:1")
 cb = Colorbar(l3[1, 3]; limits = colorrange, label = "Incoming interactions")
 for (label, layout) in
     zip(["A", "B", "C", "D", "E"], [l1, l2[1, 1], l2[1, 2], l3[1, 1], l3[1, 2]])
