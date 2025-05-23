@@ -17,7 +17,8 @@ supporting: figures/si-theta-logistic.png \
 			figures/si-competition-gradient.png \
 			figures/si-feedback.png \
 			figures/si-dependent-species.png \
-			figures/si-sensitivity-mu.png
+			figures/si-sensitivity-mu.png \
+			figures/press-others.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
 	julia --project=. src/pennekamp2018/process.jl
@@ -51,3 +52,6 @@ figures/si-dependent-species.png: src/simulations/plot-dependent-species.jl
 
 figures/si-sensitivity-mu.png: src/simulations/plot-sensitivity-mu.jl
 	julia --project=. src/simulations/plot-sensitivity-mu.jl
+
+figures/press-others.png: src/simulations/press-others.jl
+	julia --project=. src/simulations/press-others.jl
