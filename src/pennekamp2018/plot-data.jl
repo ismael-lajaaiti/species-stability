@@ -22,6 +22,7 @@ df_avg = combine(
 )
 df_avg = innerjoin(df_avg, df_K; on = [:predicted_species, :temperature])
 df_A = DataFrame(CSV.File("data/pennekamp2018/A_normalized.csv"))
+df_mono = DataFrame(CSV.File("data/pennekamp2018/df_mono.csv"))
 
 df_avg2 = combine(
     groupby(df, [:predicted_species, :temperature, :combination]),
@@ -173,18 +174,14 @@ l1[1, 2] = Legend(fig, ax1, "Species"; rowgap = -4, tellwidth = true)
 cb = Colorbar(l2[1, 3]; limits = colorrange, colormap, label = "Temperature (°C)")
 # Last panel - interactions.
 l3 = fig[3, :] = GridLayout()
-ax = Axis(l3[1, 1]; xlabel = "SL expected", ylabel = "SL observed")
+ax3 = Axis(l3[1, 1]; xlabel = "Unweighted incoming\ninteractions", ylabel = "SL observed")
+ax4 = Axis(l3[1, 2]; xlabel = "Weighted incoming\ninteractions", ylabel = "SL observed")
 for (i, sp) in enumerate(species_list)
     df_sp = subset(df_SL, :predicted_species => ByRow(==(sp)))
-    scatter!(df_sp.SL_exp, df_sp.SL; alpha)
+    scatter!(ax3, df_sp.Ai, df_sp.SL; alpha)
+    scatter!(ax4, 1 .+ df_sp.SL_exp, df_sp.SL; alpha)
 end
-ablines!(0, 1; color = :black, label = "1:1")
-axislegend(; position = :lt)
-ax = Axis(l3[1, 2]; xlabel = "SL expected")
-colorrange = extrema(df_SL.Ai)
-scatter!(df_SL.SL_exp, df_SL.SL; color = Float64.(df_SL.Ai), alpha, colorrange)
-ablines!(0, 1; color = :black, label = "1:1")
-cb = Colorbar(l3[1, 3]; limits = colorrange, label = "Incoming interactions")
+hideydecorations!(ax4)
 for (label, layout) in
     zip(["A", "B", "C", "D", "E"], [l1, l2[1, 1], l2[1, 2], l3[1, 1], l3[1, 2]])
     Label(

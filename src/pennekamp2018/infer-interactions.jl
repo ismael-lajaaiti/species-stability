@@ -61,3 +61,4 @@ df_A_normalized = vcat(df_list...)
 
 # Prepare for saving interaction matrix as a dataframe.
 CSV.write("data/pennekamp2018/A_normalized.csv", df_A_normalized)
+CSV.write("data/pennekamp2018/df_mono.csv", df_mono)
