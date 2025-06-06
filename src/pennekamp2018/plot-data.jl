@@ -16,7 +16,6 @@ df = DataFrame(CSV.File("data/pennekamp2018/processed-data.csv"))
 df = subset(df, :day => ByRow(>=(day_start)))
 df = subset(df, :day => ByRow(<=(day_end)))
 df = subset(df, :richness => ByRow(>=(S_min)))
-df_K = DataFrame(CSV.File("data/pennekamp2018/K_linear-model.csv"))
 df_avg = combine(
     groupby(df, [:predicted_species, :temperature]),
     :species_biomass => mean ∘ skipmissing => :species_biomass,
@@ -24,17 +23,16 @@ df_avg = combine(
 df_A = DataFrame(CSV.File("data/pennekamp2018/A_normalized.csv"))
 df_mono = DataFrame(CSV.File("data/pennekamp2018/df_mono.csv"))
 df_avg = innerjoin(df_avg, df_mono; on = [:predicted_species, :temperature])
-rename!(df_avg, :B_mono => :K_estimated)
+rename!(df_avg, :B_mono => :K)
 df_avg2 = combine(
     groupby(df, [:predicted_species, :temperature, :combination]),
     :species_biomass => mean ∘ skipmissing => :species_biomass,
 )
-df_avg2 = innerjoin(df_avg2, df_K; on = [:predicted_species, :temperature])
 df_avg2 = innerjoin(df_avg2, df_mono; on = [:predicted_species, :temperature])
 
 df_SL = deepcopy(df_avg2)
 subset!(df)
-rename!(df_SL, :species_biomass => :B, :K_estimated => :K)
+rename!(df_SL, :species_biomass => :B, :B_mono => :K)
 df_SL.SL = df_SL.B ./ df_SL.K
 gdf = groupby(df_SL, [:temperature, :combination])
 for a in gdf
@@ -80,8 +78,8 @@ df_mu = combine(groupby(df_mu, :species), :mu => mean => :mu)
 df_kappa = DataFrame(; predicted_species = String[], kappa = Float64[])
 for gdf in groupby(df_avg, :predicted_species)
     sp = first(unique(gdf.predicted_species))
-    Kmin, Kmax = extrema(gdf.K_estimated)
-    kappa = (Kmax - Kmin) / mean(gdf.K_estimated)
+    Kmin, Kmax = extrema(gdf.K)
+    kappa = (Kmax - Kmin) / mean(gdf.K)
     push!(df_kappa, (sp, kappa))
 end
 kappa_list = df_kappa.kappa
@@ -138,10 +136,10 @@ colormap = :lipari
 for gdf in groupby(df_avg, :predicted_species)
     sp = gdf.predicted_species |> first
     B_ref = mean(gdf.species_biomass)
-    K_ref = mean(gdf.K_estimated)
+    K_ref = mean(gdf.K)
     ry_ref = B_ref / K_ref
-    ry = mean(gdf.species_biomass ./ gdf.K_estimated)
-    model = lm(@formula(species_biomass ~ K_estimated), gdf)
+    ry = mean(gdf.species_biomass ./ gdf.K)
+    model = lm(@formula(species_biomass ~ K), gdf)
     s_mean = coef(model)[2] / ry_ref
     s_low = coeftable(model; level).cols[5][2] / ry_ref
     s_high = coeftable(model; level).cols[6][2] / ry_ref
@@ -150,12 +148,12 @@ for gdf in groupby(df_avg, :predicted_species)
     push!(df_s, (ry, s_mean, e_low, e_high))
     gdf.predicted_biomass = predict(model, gdf)
     gdf = dropmissing(gdf, :predicted_biomass)
-    scatter!(ax1, gdf.K_estimated, gdf.species_biomass; label = "$sp", alpha = 0.5)
-    lines!(ax1, gdf.K_estimated, gdf.predicted_biomass;)
-    lines!(ax2, gdf.K_estimated, gdf.predicted_biomass; color = :grey)
+    scatter!(ax1, gdf.K, gdf.species_biomass; label = "$sp", alpha = 0.5)
+    lines!(ax1, gdf.K, gdf.predicted_biomass;)
+    lines!(ax2, gdf.K, gdf.predicted_biomass; color = :grey)
     scatter!(
         ax2,
-        gdf.K_estimated,
+        gdf.K,
         gdf.species_biomass;
         label = "$sp",
         alpha,

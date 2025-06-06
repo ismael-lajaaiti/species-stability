@@ -30,12 +30,10 @@ for i in 1:3
             K_i = Normal(1, K_std),
             interaction = :core,
         )
-        c = assemble(c)
-        N_ref = abundance(c)
+        global c = assemble(c)
+        global N_ref = abundance(c)
         S = richness(c)
     end
-    @info S
-    @info N_ref
     # Press on whole community.
     D = LogNormal(log(0.1), 0.5)
     tspan = (0, 1_000)
@@ -103,4 +101,4 @@ for i in 1:3
 end
 fig
 
-save("figures/si-strong-interactions.svg", fig)
+save("figures/si-strong-interactions.png", fig)

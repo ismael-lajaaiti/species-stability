@@ -25,8 +25,8 @@ supporting: figures/si-theta-logistic.png \
 			figures/si-dependent-species.png \
 			figures/si-sensitivity-mu.png \
 			figures/si-strong-interactions.png \
-			figures/press-others.png \
-			figures/eigvec-alignment.png \
+			figures/si-press-others.png \
+			figures/si-eigvec-alignment.png \
 			figures/si-pulse-growth-rate.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
@@ -62,10 +62,10 @@ figures/si-sensitivity-mu.png: src/simulations/plot-sensitivity-mu.jl
 figures/si-strong-interactions.png: src/simulations/plot-strong-interactions.jl
 	julia --project=. src/simulations/plot-strong-interactions.jl
 
-figures/press-others.png: src/simulations/plot-press-others.jl
+figures/si-press-others.png: src/simulations/plot-press-others.jl
 	julia --project=. src/simulations/plot-press-others.jl
 
-figures/eigvec-alignment.png: src/simulations/plot-eigvec-alignment.jl
+figures/si-eigvec-alignment.png: src/simulations/plot-eigvec-alignment.jl
 	julia --project=. src/simulations/plot-eigvec-alignment.jl
 
 figures/si-pulse-growth-rate.png: src/simulations/plot-growth-rate.jl
