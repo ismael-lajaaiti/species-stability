@@ -27,7 +27,6 @@ width = 10cm
 fig = Figure(; size = (width, 3width / 1.8), fontsize = 8pt);
 
 for (i, mu) in enumerate(mu_values)
-    @info mu
     # Create the community.
     c = rand(
         Community,
@@ -92,5 +91,5 @@ for (i, mu) in enumerate(mu_values)
     end
 end
 
-save("figures/simulations/si-sensitivity-mu.png", fig)
+save("figures/si-sensitivity-mu.png", fig)
 # save("figures/simulations/press.svg", fig)

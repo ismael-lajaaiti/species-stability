@@ -37,10 +37,11 @@ rename!(df_duo, :species_biomass => :B_duo)
 species_list = df.predicted_species |> unique |> sort
 idx = Dict([sp => i for (i, sp) in enumerate(species_list)])
 S = length(species_list)
-A = zeros(S, S)
 df_list = []
+A_list = []
 for gdf in groupby(df_duo, :temperature)
     A_normalized = zeros(S, S)
+    A = zeros(S, S)
     for a in groupby(gdf, :combination)
         a.A = (a.B_duo .- a.B_mono) ./ reverse(a.B_duo)
         a.A_normalized = a.A ./ a.B_mono .* reverse(a.B_mono)

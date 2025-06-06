@@ -1,14 +1,20 @@
-.PHONY: setup all main supporting # High-level actions.
+.PHONY: setup all clean main supporting # High-level actions.
 
 all: setup main supporting # Build everything.
+
+clean:
+	rm -rf figures
+	rm -f data/pennekamp2018/processed-data.csv
+	rm -f data/pennekamp2018/A_normalized.csv
+	rm -f data/pennekamp2018/df_mono.csv
 
 setup:
 	mkdir -p figures
 	julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
 main: data/pennekamp2018/processed-data.csv \
-      data/pennekamp2018/K_linear-model.csv \
 	  data/pennekamp2018/A_normalized.csv \
+	  data/pennekamp2018/df_mono.csv \
       figures/data.png \
 	  figures/pulse.png \
 	  figures/press.png
@@ -18,19 +24,18 @@ supporting: figures/si-theta-logistic.png \
 			figures/si-feedback.png \
 			figures/si-dependent-species.png \
 			figures/si-sensitivity-mu.png \
+			figures/si-strong-interactions.png \
 			figures/press-others.png \
-			figures/eigvec-alignment.png 
+			figures/eigvec-alignment.png \
+			figures/si-pulse-growth-rate.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
 	julia --project=. src/pennekamp2018/process.jl
 
-data/pennekamp2018/K_linear-model.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/compute-K.jl
-	julia --project=. src/pennekamp2018/plot-biomass-vs-richness.jl
+data/pennekamp2018/A_normalized.csv data/pennekamp2018/df_mono.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/infer-A-and-K.jl
+	julia --project=. src/pennekamp2018/infer-A-and-K.jl
 
-data/pennekamp2018/A_normalized.csv: data/pennekamp2018/processed-data.csv src/pennekamp2018/infer-interactions.jl
-	julia --project=. src/pennekamp2018/infer-interactions.jl
-
-figures/data.png: data/pennekamp2018/processed-data.csv data/pennekamp2018/K_linear-model.csv src/pennekamp2018/plot-data.jl
+figures/data.png: data/pennekamp2018/processed-data.csv data/pennekamp2018/df_mono.csv data/pennekamp2018/A_normalized.csv src/pennekamp2018/plot-data.jl
 	julia --project=. src/pennekamp2018/plot-data.jl
 
 figures/pulse.png: src/simulations/plot-pulse.jl
@@ -54,8 +59,14 @@ figures/si-dependent-species.png: src/simulations/plot-dependent-species.jl
 figures/si-sensitivity-mu.png: src/simulations/plot-sensitivity-mu.jl
 	julia --project=. src/simulations/plot-sensitivity-mu.jl
 
+figures/si-strong-interactions.png: src/simulations/plot-strong-interactions.jl
+	julia --project=. src/simulations/plot-strong-interactions.jl
+
 figures/press-others.png: src/simulations/plot-press-others.jl
 	julia --project=. src/simulations/plot-press-others.jl
 
 figures/eigvec-alignment.png: src/simulations/plot-eigvec-alignment.jl
 	julia --project=. src/simulations/plot-eigvec-alignment.jl
+
+figures/si-pulse-growth-rate.png: src/simulations/plot-growth-rate.jl
+	julia --project=. src/simulations/plot-growth-rate.jl
