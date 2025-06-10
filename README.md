@@ -1,6 +1,6 @@
-# Revealing the organization of species stability in ecological communities
+# Linking biotic interactions to species stability
 
-Code to reproduce the figures of the manuscript *Revealing the organization of species stability in ecological communities*.
+Code to reproduce the figures of the manuscript *Linking biotic interactions to species stability*.
 
 ## Generate the figures of the article
 
