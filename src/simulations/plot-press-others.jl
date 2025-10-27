@@ -53,4 +53,4 @@ lines!(ry_val, pred; color = :black, label = "prediction")
 axislegend()
 fig
 
-save("figures/press-others.png", fig)
+save("figures/si-press-others.png", fig)

@@ -27,7 +27,8 @@ supporting: figures/si-theta-logistic.png \
 			figures/si-strong-interactions.png \
 			figures/si-press-others.png \
 			figures/si-eigvec-alignment.png \
-			figures/si-pulse-growth-rate.png
+			figures/si-pulse-growth-rate.png \
+			figures/si-average-recovery.png
 
 data/pennekamp2018/processed-data.csv: data/pennekamp2018/raw-data.csv src/pennekamp2018/process.jl
 	julia --project=. src/pennekamp2018/process.jl
@@ -70,3 +71,6 @@ figures/si-eigvec-alignment.png: src/simulations/plot-eigvec-alignment.jl
 
 figures/si-pulse-growth-rate.png: src/simulations/plot-growth-rate.jl
 	julia --project=. src/simulations/plot-growth-rate.jl
+
+figures/si-average-recovery.png: src/simulations/plot-average-recovery.jl
+	julia --project=. src/simulations/plot-average-recovery.jl

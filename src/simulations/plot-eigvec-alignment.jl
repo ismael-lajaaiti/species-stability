@@ -38,4 +38,4 @@ for i in 1:10
 end
 fig
 
-save("figures/eigvec-alignment.png", fig)
+save("figures/si-eigvec-alignment.png", fig)
