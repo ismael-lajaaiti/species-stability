@@ -6,6 +6,7 @@ using Random
 using DifferentialEquations
 using CairoMakie
 set_theme!(theme_minimal())
+set_theme!(theme_black())
 Random.seed!(123)
 
 # Create the community.
@@ -92,15 +93,15 @@ duration = 1.0
 idx = findfirst(==(duration), ts)
 r_simu = -(log.(abs.(xi_sp_avg[:, idx]))) ./ duration
 scatter!(ry, r_simu; color=:goldenrod)
-lines!(ry_vals, R.(ry_vals, duration); color=:black)
+lines!(ry_vals, R.(ry_vals, duration); color=:white)
 # Axis 3. Species long-term recovery rate.
 ax3 = Axis(g2[1, 2]; xlabel="SL", title="Long-term")
 duration = 10
 idx = findfirst(==(duration), ts)
 r_simu = -(log.(abs.(xi_sp_avg[:, idx]))) ./ duration
 scatter!(ry, r_simu; color=:orangered3)
-lines!(ry_vals, R.(ry_vals, duration); color=:black)
+lines!(ry_vals, R.(ry_vals, duration); color=:white)
 fig
 
-save("figures/pulse.png", fig)
+save("figures/pulse-dark.png", fig)
 # save("figures/simulations/pulse.svg", fig)

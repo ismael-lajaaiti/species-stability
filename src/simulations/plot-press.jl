@@ -5,6 +5,7 @@ using Distributions
 using Random
 using CairoMakie
 set_theme!(theme_minimal())
+set_theme!(theme_black())
 Random.seed!(12)
 
 # Create the community.
@@ -67,13 +68,18 @@ pt = 4 / 3
 cm = inch / 2.54
 width = 10cm
 fig = Figure(; size = (width, width / 1.8), fontsize = 8pt);
-ax1 = Axis(fig[1, 2]; xlabel = "SL")
+ax1 = Axis(fig[1, 2]; xlabel = "SL", title = "Single species")
 scatter!(ry, sensitivity_sp; color = :orangered3, label = "simulation")
-lines!(ry_val, 1 ./ ry_val; color = :black, label = "analytical\nprediction")
+lines!(ry_val, 1 ./ ry_val; color = :white, label = "analytical\nprediction")
 ax1.yreversed = true
-ax2 = Axis(fig[1, 1]; xlabel = "SL", ylabel = "Sensitivity to press (reversed)")
+ax2 = Axis(
+    fig[1, 1];
+    xlabel = "SL",
+    ylabel = "Sensitivity to press (reversed)",
+    title = "All species",
+)
 scatter!(ry, sensitivity_com; color = :goldenrod, label = "simulation")
-lines!(ry_val, pred_stab; color = :black, label = "analytical\nprediction")
+lines!(ry_val, pred_stab; color = :white, label = "analytical\nprediction")
 ax2.yreversed = true
 axislegend(; position = :rt)
 l1 = fig[1, 1] = GridLayout()
@@ -89,5 +95,5 @@ for (label, layout) in zip(["A", "B"], [l1, l2])
 end
 fig
 
-save("figures/press.png", fig)
+save("figures/press-black.png", fig)
 # save("figures/simulations/press.svg", fig)
