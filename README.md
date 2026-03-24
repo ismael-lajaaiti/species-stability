@@ -15,7 +15,7 @@ make setup
 This should create the `figures/` folder, and install all required packages.
 
 > [!TIP]
-> We advise to use Julia 1.11.
+> We advise to use Julia 1.12.
 
 Next, the figures of the main text can be generate with
 
